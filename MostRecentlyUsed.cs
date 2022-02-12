@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MulitThread
+﻿namespace MulitThread
 {
-    public class MostRecentlyUsed
+    internal class MostRecentlyUsed
     {
-        private List<string> _recentlyUsed = new List<string>();
+        private List<string> _recentlyUsed = new();
         private int _maxItems;
-        private object _lock = new object();
+        private object _lock = new();
 
         public MostRecentlyUsed(int maxItems) => _maxItems = maxItems;
 
@@ -31,7 +25,7 @@ namespace MulitThread
                         _recentlyUsed.RemoveAt(_recentlyUsed.Count - 1);
                 }
 
-                //foreach(string num in _recentlyUsed) Console.WriteLine(num);
+                foreach(string num in _recentlyUsed) Console.WriteLine(num);
             }
         }
 
@@ -45,11 +39,25 @@ namespace MulitThread
 
         public static void TestMru(MostRecentlyUsed mru)
         {
-            Random random = new Random(Thread.CurrentThread.ManagedThreadId);
+            Random random = new(Thread.CurrentThread.ManagedThreadId);
             string[] items = { "one", "two", "three", "four", "five", "six", "seven", "eight" };
             
-            for (int i = 0; i < 10000; ++i)
+            for (int i = 0; i < 5; ++i)
                 mru.UseItem(items[random.Next(items.Length)]);
+        }
+
+        public static void Main()
+        {
+            MostRecentlyUsed mru = new(4);
+
+            List<Thread> threads = (from i in Enumerable.Range(0, 3) select new Thread(() => MostRecentlyUsed.TestMru(mru))).ToList();
+
+            threads.ForEach(t => t.Start());
+            threads.ForEach(t => t.Join());
+
+            Console.WriteLine("\nFinal contents are: ");
+            foreach (string item in mru.GetItems())
+                Console.WriteLine(item);
         }
     }
 }
