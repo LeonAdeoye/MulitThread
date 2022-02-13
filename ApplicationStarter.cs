@@ -16,16 +16,10 @@ namespace MulitThread
             _serviceVerifiers.Add(new WorkbenchServiceVerifierImpl("configuration-servivce", _latch));
             _serviceVerifiers.Add(new WorkbenchServiceVerifierImpl("security-servivce", _latch));
 
-            Console.WriteLine("Waiting for verification");
-
+            Console.WriteLine("Waiting for verification...");
             foreach (IServiceVerifier serviceVerifier in _serviceVerifiers)
             {
-                ThreadStart threadStart = delegate
-                {
-                    serviceVerifier.Verify();
-                };
-
-                new Thread(threadStart).Start();
+                new Thread(new ThreadStart(serviceVerifier.Verify)).Start();
             }
 
             _latch.Wait();
