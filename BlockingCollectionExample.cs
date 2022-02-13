@@ -15,13 +15,21 @@ namespace MulitThread
             int count = 10;
 
             Consumer consumer = new(blockingCollection, count);
-            Thread consumerThread = new(new ThreadStart(consumer.Run));
-
             Producer producer = new(blockingCollection, count);
-            Thread producerThread = new(new ThreadStart(producer.Run));
 
-            consumerThread.Start();
-            producerThread.Start();
+            // Create threads using Thread and ThreadStart:
+            //new Thread(new ThreadStart(consumer.Run)).Start();
+            //new Thread(new ThreadStart(producer.Run)).Start();
+
+            // Create parent-child thread using Task Parallel Library:
+            Task parentTask = Task.Factory.StartNew(() =>
+            {
+                Task.Factory.StartNew(() => consumer.Run(), TaskCreationOptions.AttachedToParent);
+                Task.Factory.StartNew(() => producer.Run(), TaskCreationOptions.AttachedToParent);
+            });
+
+            parentTask.Wait();
+
         }
     }
 }

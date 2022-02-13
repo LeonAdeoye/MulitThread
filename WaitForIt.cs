@@ -77,15 +77,15 @@
                 waiter.GoNow();
                 Console.WriteLine("Notified...");
                 Thread.Sleep(1000);
-                Console.WriteLine("Thread Existing...");
+                Console.WriteLine("Thread Exiting...");
             };
 
             Thread t = new(tWork);
-            Console.WriteLine("starting new thread.");
+            Console.WriteLine("\nStarting new thread.");
             t.Start();
-            Console.WriteLine("Waiting for thread to get going.");
+            Console.WriteLine("Waiting for the thread to get going.");
             waiter.WaitUntilReady();
-            Console.WriteLine("Wait over.");
+            Console.WriteLine("Wait is over.");
         }
     }
 }

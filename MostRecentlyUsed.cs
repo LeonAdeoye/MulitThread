@@ -25,7 +25,8 @@
                         _recentlyUsed.RemoveAt(_recentlyUsed.Count - 1);
                 }
 
-                foreach(string num in _recentlyUsed) Console.WriteLine(num);
+                // Uncomment to see contents after each iteration
+                //foreach(string num in _recentlyUsed) Console.WriteLine(num);
             }
         }
 

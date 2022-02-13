@@ -29,5 +29,10 @@ namespace MulitThread
                 Console.WriteLine(ex.Message);
             } 
         }
+
+        string IServiceVerifier.GetName()
+        {
+            return _name;
+        }
     }
 }
