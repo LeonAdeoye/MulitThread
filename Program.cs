@@ -1,5 +1,8 @@
 ﻿using MulitThread;
 
+// Tasks
+await MakeBreakfastAsync.Main();
+
 // Example of blocking collection
 BlockingCollectionExample.Main();
 
