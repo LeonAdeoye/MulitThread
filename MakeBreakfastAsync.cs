@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MulitThread
+﻿namespace MulitThread
 {
     class Egg  {}
 
@@ -14,44 +8,47 @@ namespace MulitThread
 
     internal class MakeBreakfastAsync
     {
-        static async Task<Toast> MakeToastWithButterAsync(int quantity)
+        private static void ApplyButter() => Console.WriteLine("Spreading butter on the toast.");
+
+        private static async Task<Toast> MakeToastWithButterAsync(int quantity)
         {
             Console.WriteLine($"Putting {quantity} slices of bread in the toaster.");
             Console.WriteLine($"Toasting bread.");
             await Task.Delay(500);
             for (int slices = 0; slices < quantity; ++slices)
             {
-                Console.WriteLine($"Putting toasted slice of bread on plate.");
+                ApplyButter();
+                Console.WriteLine($"Putting the slice of bread on a plate.");
             }
             return new();
         }
 
-        static async Task<Egg> FryEggsAsync(int quantity)
+        private static async Task<Egg> FryEggsAsync(int quantity)
         {
-            Console.WriteLine($"Cracking {quantity} eggs into the pan.");
-            Console.WriteLine($"Cooking eggs.");
+            Console.WriteLine($"Cracking open {quantity} eggs into the pan.");
+            Console.WriteLine($"Cooking the eggs.");
             await Task.Delay(500);
             for (int eggCount = 0; eggCount < quantity; ++eggCount)
             {
-                Console.WriteLine($"Putting egg on plate.");
+                Console.WriteLine($"Putting the egg on a plate.");
             }
             return new();
         }
 
-        static async Task<Bacon> FryBaconAsync(int quantity)
+        private static async Task<Bacon> FryBaconAsync(int quantity)
         {
             Console.WriteLine($"Putting {quantity} slices of bacon in the pan.");
-            Console.WriteLine($"Cooking first side of bacon.");
+            Console.WriteLine($"Cooking the first side of bacon.");
             await Task.Delay(500);
             for (int slices = 0; slices < quantity; ++slices)
             {
-                Console.WriteLine($"Flipping slice of bacon.");
+                Console.WriteLine($"Flipping the slice of bacon.");
             }
-            Console.WriteLine($"Cooking second side of bacon.");
+            Console.WriteLine($"Cooking the second side of bacon.");
             await Task.Delay(400);
             for (int slices = 0; slices < quantity; ++slices)
             {
-                Console.WriteLine($"Putting slice of bacon on plate.");
+                Console.WriteLine($"Putting the slice of bacon on a plate.");
             }
             return new();
         }
@@ -61,8 +58,11 @@ namespace MulitThread
             var eggsTask = FryEggsAsync(2);
             var baconTask = FryBaconAsync(4);
             var toastTask = MakeToastWithButterAsync(3);
-            var breakfastTasks = new List<Task>() { eggsTask, baconTask, toastTask };
 
+            // if you want to wait for all tasks to complete you can use WhenAll.
+            // await Task.WhenAll(eggsTask, baconTask, toastTask);
+
+            var breakfastTasks = new List<Task>() { eggsTask, baconTask, toastTask };
             while(breakfastTasks.Count > 0)
             {
                 Task finishedTask = await Task.WhenAny(breakfastTasks);
@@ -80,12 +80,7 @@ namespace MulitThread
                 }
                 breakfastTasks.Remove(finishedTask);
             }
-
-            Console.WriteLine("Breakfast is ready!!!\n");
+            Console.WriteLine("All done. Breakfast is ready!!!\n");
         }
-
-        private static void applyButter() => Console.WriteLine("Putting butter on toast.");
-
-
     }
 }
