@@ -2,9 +2,9 @@
 {
     internal class MostRecentlyUsed
     {
-        private List<string> _recentlyUsed = new();
-        private int _maxItems;
-        private object _lock = new();
+        readonly private List<string> _recentlyUsed = new();
+        readonly private int _maxItems;
+        readonly private object _lock = new();
 
         public MostRecentlyUsed(int maxItems) => _maxItems = maxItems;
 
@@ -56,7 +56,7 @@
             threads.ForEach(t => t.Start());
             threads.ForEach(t => t.Join());
 
-            Console.WriteLine("\nFinal contents are: ");
+            Console.WriteLine("\nFinal contents of list after synchronization are: ");
             foreach (string item in mru.GetItems())
                 Console.WriteLine(item);
         }

@@ -25,7 +25,8 @@ namespace MulitThread
             Task parentTask = Task.Factory.StartNew(() =>
             {
                 Task.Factory.StartNew(() => consumer.Run(), TaskCreationOptions.AttachedToParent);
-                Task.Factory.StartNew(() => producer.Run(), TaskCreationOptions.AttachedToParent);
+                Task.Factory.StartNew(() => producer.Run(), TaskCreationOptions.AttachedToParent)
+                    .ContinueWith(t => Console.WriteLine("The consumer and producer are done with blocking collection."));
             });
 
             parentTask.Wait();
