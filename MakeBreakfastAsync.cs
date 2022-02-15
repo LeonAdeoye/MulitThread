@@ -23,7 +23,8 @@
             return new();
         }
 
-        private static async Task<long> ThinkAboutLife(long times)
+        // This is not an Async method, and does not return a Task. It is a CPU-bound operation. However, you can run it asynchronously using Task.Run().
+        private static long ThinkAboutLife(long times)
         {
             long totalThoughts = 0;
 
@@ -65,6 +66,8 @@
 
         public static async Task Main()
         {
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            // Use Task.Run to wrap an asynchronous bubble around a method call that is synchronous, making the method call asynchronous. 
             var thinkingTask = Task.Run(() => ThinkAboutLife(100000000));
             var eggsTask = FryEggsAsync(2);
             var baconTask = FryBaconAsync(4);
@@ -95,7 +98,9 @@
                 }
                 breakfastTasks.Remove(finishedTask);
             }
-            Console.WriteLine("All done. Breakfast is ready!!!\n");
+
+            stopWatch.Stop();
+            Console.WriteLine($"All done after {stopWatch.ElapsedMilliseconds} ms. Breakfast is ready!!!\n");
         }
     }
 }
