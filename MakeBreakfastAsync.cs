@@ -23,6 +23,16 @@
             return new();
         }
 
+        private static async Task<long> ThinkAboutLife(long times)
+        {
+            long totalThoughts = 0;
+
+            for (long thoughtCounts = 0; thoughtCounts < times; ++thoughtCounts)
+                totalThoughts++;
+
+            return totalThoughts;
+        }
+
         private static async Task<Egg> FryEggsAsync(int quantity)
         {
             Console.WriteLine($"Cracking open {quantity} eggs into the pan.");
@@ -55,6 +65,7 @@
 
         public static async Task Main()
         {
+            var thinkingTask = Task.Run(() => ThinkAboutLife(100000000));
             var eggsTask = FryEggsAsync(2);
             var baconTask = FryBaconAsync(4);
             var toastTask = MakeToastWithButterAsync(3);
@@ -62,7 +73,7 @@
             // if you want to wait for all tasks to complete you can use WhenAll.
             // await Task.WhenAll(eggsTask, baconTask, toastTask);
 
-            var breakfastTasks = new List<Task>() { eggsTask, baconTask, toastTask };
+            var breakfastTasks = new List<Task>() { eggsTask, baconTask, toastTask, thinkingTask};
             while(breakfastTasks.Count > 0)
             {
                 Task finishedTask = await Task.WhenAny(breakfastTasks);
@@ -77,6 +88,10 @@
                 else if(finishedTask == toastTask)
                 {
                     Console.WriteLine("Toast is ready");
+                }
+                else if(finishedTask == thinkingTask)
+                {
+                    Console.WriteLine($"while cooking I had {thinkingTask.Result} thoughts!");
                 }
                 breakfastTasks.Remove(finishedTask);
             }
